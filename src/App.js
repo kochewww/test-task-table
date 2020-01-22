@@ -35,7 +35,7 @@ function App() {
     };
   }
   function sortBy(key) {
-    setDirection(direction === "desc" ? "asc" : "desc");
+    setDirection(direction === "asc" ? "desc" : "asc");
     const arrayCopy = data.concat();
     arrayCopy.sort(compareBy(key));
     if (direction === "asc") {
@@ -43,8 +43,8 @@ function App() {
     } else {
       arrayCopy.reverse();
       setData(arrayCopy);
-      setColumn(key);
     }
+    setColumn(key);
   }
   const setArrow = key => {
     let className = "sort-direction";
@@ -52,8 +52,6 @@ function App() {
     if (key === column) {
       className += direction === "asc" ? " asc" : " desc";
     }
-
-    console.log(className);
 
     return className;
   };
