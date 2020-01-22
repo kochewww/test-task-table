@@ -1,35 +1,58 @@
 import React from "react";
+import styled from "styled-components";
+const Arrow = styled.span`
+  display: inline-block;
+  height: 0;
+  width: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
 
-export default function Table() {
+  &.asc {
+    border-bottom: 5px solid black;
+  }
+
+  &.desc {
+    border-top: 5px solid black;
+  }
+`;
+
+export default function Table(props) {
   return (
-    <table class="table">
+    <table className="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th onClick={() => props.sortBy("id")}>
+            ID
+            <Arrow className={props.setArrow("id")} />
+          </th>
+          <th scope="col" onClick={() => props.sortBy("firstName")}>
+            First Name
+            <Arrow className={props.setArrow("firstName")} />
+          </th>
+          <th scope="col" onClick={() => props.sortBy("lastName")}>
+            Last Name
+            <Arrow className={props.setArrow("lastName")} />
+          </th>
+          <th scope="col" onClick={() => props.sortBy("email")}>
+            Email
+            <Arrow className={props.setArrow("email")} />
+          </th>
+          <th scope="col" onClick={() => props.sortBy("phone")}>
+            Phone
+            <Arrow className={props.setArrow("phone")} />
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {props.data.map(element => (
+          <tr key={element.id + element.firstName}>
+            <td>{element.id}</td>
+            <td>{element.firstName}</td>
+            <td>{element.lastName}</td>
+            <td>{element.email}</td>
+            <td>{element.phone}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
