@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+/* styling */
 const Arrow = styled.span`
   display: inline-block;
   height: 0;
@@ -17,43 +18,86 @@ const Arrow = styled.span`
 `;
 
 export default function Table(props) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const personsPerPage = 50;
+  const indexOfLastPerson = currentPage * personsPerPage;
+  const indexOfFirstPerson = indexOfLastPerson - personsPerPage;
+  const currentPersons = props.data.slice(
+    indexOfFirstPerson,
+    indexOfLastPerson
+  );
+
+  const handleClick = event => {
+    setCurrentPage(event.target.id);
+  };
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(props.data.length / personsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th onClick={() => props.sortBy("id")}>
-            ID
-            <Arrow className={props.setArrow("id")} />
-          </th>
-          <th scope="col" onClick={() => props.sortBy("firstName")}>
-            First Name
-            <Arrow className={props.setArrow("firstName")} />
-          </th>
-          <th scope="col" onClick={() => props.sortBy("lastName")}>
-            Last Name
-            <Arrow className={props.setArrow("lastName")} />
-          </th>
-          <th scope="col" onClick={() => props.sortBy("email")}>
-            Email
-            <Arrow className={props.setArrow("email")} />
-          </th>
-          <th scope="col" onClick={() => props.sortBy("phone")}>
-            Phone
-            <Arrow className={props.setArrow("phone")} />
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.data.map(element => (
-          <tr key={element.id + element.firstName}>
-            <td>{element.id}</td>
-            <td>{element.firstName}</td>
-            <td>{element.lastName}</td>
-            <td>{element.email}</td>
-            <td>{element.phone}</td>
+    <div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th onClick={() => props.sortBy("id")}>
+              ID
+              <Arrow className={props.setArrow("id")} />
+            </th>
+            <th scope="col" onClick={() => props.sortBy("firstName")}>
+              First Name
+              <Arrow className={props.setArrow("firstName")} />
+            </th>
+            <th scope="col" onClick={() => props.sortBy("lastName")}>
+              Last Name
+              <Arrow className={props.setArrow("lastName")} />
+            </th>
+            <th scope="col" onClick={() => props.sortBy("email")}>
+              Email
+              <Arrow className={props.setArrow("email")} />
+            </th>
+            <th scope="col" onClick={() => props.sortBy("phone")}>
+              Phone
+              <Arrow className={props.setArrow("phone")} />
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {currentPersons.map((person, index) => (
+            <tr
+              index={index}
+              key={person.id + person.phone}
+              onClick={() => props.onSelect(person)}
+            >
+              <td>{person.id}</td>
+              <td>{person.firstName}</td>
+              <td>{person.lastName}</td>
+              <td>{person.email}</td>
+              <td>{person.phone}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {props.data.length > 50 && (
+        <nav aria-label="Page navigation example">
+          <ul id="page-numbers" className="pagination">
+            {pageNumbers.map(number => {
+              return (
+                <button
+                  className="page-link"
+                  href=""
+                  key={number}
+                  id={number}
+                  onClick={handleClick}
+                >
+                  {number}
+                </button>
+              );
+            })}
+          </ul>
+        </nav>
+      )}
+    </div>
   );
 }

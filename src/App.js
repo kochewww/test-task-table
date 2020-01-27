@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Loading from "./Loading";
 import Table from "./Table";
+import AdditionalInfo from "./AdditionalInfo";
+import DataSelector from "./DataSelector";
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
   const [direction, setDirection] = useState("desc");
   const [column, setColumn] = useState(null);
-  const urlSmallData =
-    "http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D";
+  const [row, setRow] = useState(null);
+  const [isDataSelected, setIsDataSelected] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(urlSmallData);
-        const data = await response.json();
-        setData(data);
-      } catch (err) {
-        setIsError(true);
-        setError(err.message);
-        console.log(error);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [error]);
+  async function fetchData(url) {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setData(data);
+    } catch (err) {
+      setIsError(true);
+      setError(err.message);
+      console.log(error);
+    }
+    setIsLoading(false);
+  }
   function compareBy(key) {
     return function(a, b) {
       if (a[key] < b[key]) return -1;
@@ -55,14 +53,36 @@ function App() {
 
     return className;
   };
-
+  const onSelect = row => {
+    console.log(row);
+    setRow(row);
+  };
+  function onChoose(url) {
+    setIsDataSelected(true);
+    setIsLoading(true);
+    fetchData(url);
+  }
+  if (!isDataSelected) {
+    return (
+      <div className="container">
+        <DataSelector onChoose={onChoose} />
+      </div>
+    );
+  }
   return (
     <div className="container">
       {isLoading ? (
         <Loading />
       ) : (
-        <Table data={data} setArrow={setArrow} sortBy={sortBy} />
+        <Table
+          data={data}
+          setArrow={setArrow}
+          sortBy={sortBy}
+          onSelect={onSelect}
+        />
       )}
+
+      {row ? <AdditionalInfo person={row} /> : null}
       {isError && (
         <div>
           <p>Ошибка: {error}</p>
