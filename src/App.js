@@ -3,6 +3,7 @@ import Loading from "./Loading";
 import Table from "./Table";
 import AdditionalInfo from "./AdditionalInfo";
 import DataSelector from "./DataSelector";
+import Search from "./Search";
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
@@ -12,6 +13,7 @@ function App() {
   const [column, setColumn] = useState(null);
   const [row, setRow] = useState(null);
   const [isDataSelected, setIsDataSelected] = useState(false);
+  const [search, setSearch] = useState();
 
   async function fetchData(url) {
     try {
@@ -62,6 +64,25 @@ function App() {
     setIsLoading(true);
     fetchData(url);
   }
+  const searchHandler = search => {
+    setSearch(search);
+  };
+  const getFilteredData = () => {
+    if (!search) {
+      return data;
+    }
+    return data.filter(person => {
+      return (
+        person["firstName"].toLowerCase().includes(search.toLowerCase()) ||
+        person["lastName"].toLowerCase().includes(search.toLowerCase()) ||
+        person["email"].toLowerCase().includes(search.toLowerCase()) ||
+        person["id"].toString().includes(search) ||
+        person["phone"].includes(search)
+      );
+    });
+  };
+  const filteredData = getFilteredData();
+
   if (!isDataSelected) {
     return (
       <div className="container">
@@ -74,12 +95,15 @@ function App() {
       {isLoading ? (
         <Loading />
       ) : (
-        <Table
-          data={data}
-          setArrow={setArrow}
-          sortBy={sortBy}
-          onSelect={onSelect}
-        />
+        <div>
+          <Search onSearch={searchHandler} />
+          <Table
+            data={filteredData}
+            setArrow={setArrow}
+            sortBy={sortBy}
+            onSelect={onSelect}
+          />
+        </div>
       )}
 
       {row ? <AdditionalInfo person={row} /> : null}
