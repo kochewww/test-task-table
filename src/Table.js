@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Pagination from "./Pagination";
 
 /* styling */
 const Arrow = styled.span`
@@ -8,20 +9,17 @@ const Arrow = styled.span`
   width: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-
   &.asc {
     border-bottom: 5px solid black;
   }
-
   &.desc {
     border-top: 5px solid black;
   }
 `;
 
 export default function Table(props) {
-  const [currentPage, setCurrentPage] = useState(1);
   const personsPerPage = 50;
-  const indexOfLastPerson = currentPage * personsPerPage;
+  const indexOfLastPerson = props.currentPage * personsPerPage;
   const indexOfFirstPerson = indexOfLastPerson - personsPerPage;
   const currentPersons = props.data.slice(
     indexOfFirstPerson,
@@ -29,7 +27,7 @@ export default function Table(props) {
   );
 
   const handleClick = event => {
-    setCurrentPage(event.target.id);
+    props.setCurrentPage(event.target.id);
   };
 
   const pageNumbers = [];
@@ -81,23 +79,7 @@ export default function Table(props) {
         </tbody>
       </table>
       {props.data.length > 50 && (
-        <nav aria-label="Page navigation example">
-          <ul id="page-numbers" className="pagination">
-            {pageNumbers.map(number => {
-              return (
-                <button
-                  className="page-link"
-                  href=""
-                  key={number}
-                  id={number}
-                  onClick={handleClick}
-                >
-                  {number}
-                </button>
-              );
-            })}
-          </ul>
-        </nav>
+        <Pagination handleClick={handleClick} pageNumbers={pageNumbers} />
       )}
     </div>
   );

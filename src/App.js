@@ -14,6 +14,7 @@ function App() {
   const [row, setRow] = useState(null);
   const [isDataSelected, setIsDataSelected] = useState(false);
   const [search, setSearch] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function fetchData(url) {
     try {
@@ -65,6 +66,7 @@ function App() {
     fetchData(url);
   }
   const searchHandler = search => {
+    setCurrentPage(1);
     setSearch(search);
   };
   const getFilteredData = () => {
@@ -102,6 +104,8 @@ function App() {
             setArrow={setArrow}
             sortBy={sortBy}
             onSelect={onSelect}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
       )}
