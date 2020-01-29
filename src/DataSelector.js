@@ -7,9 +7,9 @@ export default props => {
     margin-top: 20%;
   `;
   const lessDataUrl =
-    "//www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D";
+    "https://gist.githubusercontent.com/kochewww/fad7e42987ffff2127f2598054be6cfe/raw/cfacf5dbbed9ac6e75c8fb72d9c1ce771e13c0a5/smalldata.json";
   const moreDataUrl =
-    "//www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D";
+    "https://gist.githubusercontent.com/kochewww/5e2bc44ac9a519083729a2dd11a7e6ec/raw/3d6e9e6309370349b369aae970bfd2bf9ceb0c02/bigdata.json";
   return (
     <Wrapper>
       <button
