@@ -4,9 +4,10 @@ import Table from "./Table";
 import AdditionalInfo from "./AdditionalInfo";
 import DataSelector from "./DataSelector";
 import Search from "./Search";
+import AddUserForm from "./AddUserForm";
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
   const [direction, setDirection] = useState("desc");
@@ -28,6 +29,7 @@ function App() {
     }
     setIsLoading(false);
   }
+  /* Sorting*/
   function compareBy(key) {
     return function(a, b) {
       if (a[key] < b[key]) return -1;
@@ -57,7 +59,6 @@ function App() {
     return className;
   };
   const onSelect = row => {
-    console.log(row);
     setRow(row);
   };
   function onChoose(url) {
@@ -65,6 +66,7 @@ function App() {
     setIsLoading(true);
     fetchData(url);
   }
+  /*Searching*/
   const searchHandler = search => {
     setCurrentPage(1);
     setSearch(search);
@@ -73,6 +75,7 @@ function App() {
     if (!search) {
       return data;
     }
+
     return data.filter(person => {
       return (
         person["firstName"].toLowerCase().includes(search.toLowerCase()) ||
@@ -84,7 +87,10 @@ function App() {
     });
   };
   const filteredData = getFilteredData();
-
+  /*Adding a person*/
+  const addPerson = newPerson => {
+    setData(prevData => [newPerson, ...prevData]);
+  };
   if (!isDataSelected) {
     return (
       <div className="container">
@@ -98,6 +104,7 @@ function App() {
         <Loading />
       ) : (
         <div>
+          <AddUserForm addPerson={addPerson} />
           <Search onSearch={searchHandler} />
           <Table
             data={filteredData}
@@ -110,7 +117,7 @@ function App() {
         </div>
       )}
 
-      {row ? <AdditionalInfo person={row} /> : null}
+      {row && <AdditionalInfo person={row} />}
       {isError && (
         <div>
           <p>Ошибка: {error}</p>
